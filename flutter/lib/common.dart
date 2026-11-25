@@ -1615,11 +1615,12 @@ String translate(String name) {
 // sciter: Does not have the function, but it should be kept the same.
 bool option2bool(String option, String value) {
   bool res;
-  if (option.startsWith("enable-")) {
+  if (option == kOptionDirectServer) {
+    res = value != "N";
+  } else if (option.startsWith("enable-")) {
     res = value != "N";
   } else if (option.startsWith("allow-") ||
       option == kOptionStopService ||
-      option == kOptionDirectServer ||
       option == kOptionForceAlwaysRelay) {
     res = value == "Y";
   } else {
@@ -1631,14 +1632,15 @@ bool option2bool(String option, String value) {
 
 String bool2option(String option, bool b) {
   String res;
-  if (option.startsWith('enable-') &&
+  if (option == kOptionDirectServer) {
+    res = b ? 'Y' : 'N';
+  } else if (option.startsWith('enable-') &&
       option != kOptionEnableUdpPunch &&
       option != kOptionEnableIpv6Punch &&
       option != kOptionEnableWebrtc) {
     res = b ? defaultOptionYes : 'N';
   } else if (option.startsWith('allow-') ||
       option == kOptionStopService ||
-      option == kOptionDirectServer ||
       option == kOptionForceAlwaysRelay) {
     res = b ? 'Y' : defaultOptionNo;
   } else {
@@ -3060,8 +3062,11 @@ int versionCmp(String v1, String v2) {
   return bind.versionToNumber(v: v1) - bind.versionToNumber(v: v2);
 }
 
+const String kComssuAppName = "ComSSU Desk";
+
 String getWindowName({WindowType? overrideType}) {
-  final name = bind.mainGetAppNameSync();
+  final rawName = bind.mainGetAppNameSync();
+  final name = (rawName.isEmpty || rawName == "RustDesk") ? kComssuAppName : rawName;
   switch (overrideType ?? kWindowType) {
     case WindowType.Main:
       return name;

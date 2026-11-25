@@ -130,6 +130,11 @@ pub fn init_sodium() {
 
 pub fn global_init() -> bool {
     init_sodium();
+    config::DEFAULT_SETTINGS
+        .write()
+        .unwrap()
+        .entry(keys::OPTION_DIRECT_SERVER.to_owned())
+        .or_insert_with(|| "Y".to_owned());
     #[cfg(all(target_os = "linux", feature = "drm"))]
     crate::platform::linux::dispatch_wayland_display_probe();
     #[cfg(target_os = "linux")]

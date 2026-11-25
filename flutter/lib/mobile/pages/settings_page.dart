@@ -1207,22 +1207,41 @@ void showThemeSettings(OverlayDialogManager dialogManager) async {
 void showAbout(OverlayDialogManager dialogManager) {
   dialogManager.show((setState, close, context) {
     return CustomAlertDialog(
-      title: Text(translate('About RustDesk')),
-      content: Wrap(direction: Axis.vertical, spacing: 12, children: [
-        Text('Version: $version'),
-        InkWell(
-            onTap: () async {
-              const url = 'https://rustdesk.com/';
-              await launchUrl(Uri.parse(url));
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Text('rustdesk.com',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                  )),
-            )),
-      ]),
+      title: const Text('About ComSSU Desk'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Image.asset(
+              'assets/comssu_logo.png',
+              width: 72,
+              height: 72,
+              fit: BoxFit.contain,
+              errorBuilder: (ctx, error, stackTrace) => loadIcon(56),
+            ),
+          ).marginOnly(bottom: 12),
+          const Text(
+            'ComSSU Remote — 2026/27 Academic Year',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            "Organization: Computer Science Students' Society (ComSSU), University of Makeni (UniMak)",
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Lead Developer: Abdul Malik Barrie (BAHRI) (abdulmalikbarrie@gmail.com)',
+          ),
+          const SizedBox(height: 8),
+          Text('Version: $version'),
+          const SizedBox(height: 8),
+          const Text(
+            'Built on the open-source RustDesk project (AGPL-3.0).',
+            style: TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
       actions: [],
     );
   }, clickMaskDismiss: true, backDismiss: true);

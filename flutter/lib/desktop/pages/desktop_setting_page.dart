@@ -2595,46 +2595,105 @@ class _AboutState extends State<_About> {
       final scrollController = ScrollController();
       return SingleChildScrollView(
         controller: scrollController,
-        child: _Card(title: translate('About RustDesk'), children: [
+        child: _Card(title: 'About ComSSU Desk', children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 height: 8.0,
               ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/comssu_logo.png',
+                    width: 84,
+                    height: 84,
+                    fit: BoxFit.contain,
+                    errorBuilder: (ctx, error, stackTrace) => loadIcon(64),
+                  ).marginOnly(right: 16.0),
+                  Expanded(
+                    child: SelectionArea(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'ComSSU Desk',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4.0),
+                          const Text(
+                            'ComSSU Remote — 2026/27 Academic Year',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4.0),
+                          const Text(
+                            "Computer Science Students' Society (ComSSU) — University of Makeni (UniMak)",
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ).marginSymmetric(vertical: 8.0),
+              const Divider(),
               SelectionArea(
-                  child: Text('${translate('Version')}: $version')
-                      .marginSymmetric(vertical: 4.0)),
-              SelectionArea(
-                  child: Text('${translate('Build Date')}: $buildDate')
-                      .marginSymmetric(vertical: 4.0)),
-              if (!isWeb)
-                SelectionArea(
-                    child: Text('${translate('Fingerprint')}: $fingerprint')
-                        .marginSymmetric(vertical: 4.0)),
-              SelectionArea(
-                  child: Text('${translate('ID')}: $myId')
-                      .marginSymmetric(vertical: 4.0)),
-              InkWell(
-                  onTap: () {
-                    launchUrlString('https://rustdesk.com/privacy.html');
-                  },
-                  child: Text(
-                    translate('Privacy Statement'),
-                    style: linkStyle,
-                  ).marginSymmetric(vertical: 4.0)),
-              InkWell(
-                  onTap: () {
-                    launchUrlString('https://rustdesk.com');
-                  },
-                  child: Text(
-                    translate('Website'),
-                    style: linkStyle,
-                  ).marginSymmetric(vertical: 4.0)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Organization: Computer Science Students' Society (ComSSU), University of Makeni (UniMak)",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ).marginSymmetric(vertical: 4.0),
+                    Row(
+                      children: [
+                        const Text(
+                          'Lead Developer: Abdul Malik Barrie (BAHRI) (',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            launchUrlString(
+                                'mailto:abdulmalikbarrie@gmail.com');
+                          },
+                          child: const Text(
+                            'abdulmalikbarrie@gmail.com',
+                            style: linkStyle,
+                          ),
+                        ),
+                        const Text(
+                          ')',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ).marginSymmetric(vertical: 4.0),
+                    const Text(
+                      'Academic Year: 2026/27 Academic Year',
+                    ).marginSymmetric(vertical: 4.0),
+                    Text('${translate('Version')}: $version')
+                        .marginSymmetric(vertical: 4.0),
+                    Text('${translate('Build Date')}: $buildDate')
+                        .marginSymmetric(vertical: 4.0),
+                    if (!isWeb)
+                      Text('${translate('Fingerprint')}: $fingerprint')
+                          .marginSymmetric(vertical: 4.0),
+                    Text('${translate('ID')}: $myId')
+                        .marginSymmetric(vertical: 4.0),
+                  ],
+                ),
+              ),
               Container(
                 decoration: const BoxDecoration(color: Color(0xFF2c8cff)),
                 padding:
-                    const EdgeInsets.symmetric(vertical: 24, horizontal: 8),
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
                 child: SelectionArea(
                     child: Row(
                   children: [
@@ -2642,22 +2701,23 @@ class _AboutState extends State<_About> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Copyright © ${DateTime.now().toString().substring(0, 4)} Purslane Tech Pte. Ltd.\n$license',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          Text(
-                            translate('Slogan_tip'),
+                          const Text(
+                            "Computer Science Students' Society (ComSSU) — University of Makeni (UniMak)",
                             style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 color: Colors.white),
-                          )
+                          ),
+                          const SizedBox(height: 6.0),
+                          Text(
+                            'Built on the open-source RustDesk project (AGPL-3.0).${license.isNotEmpty ? '\n$license' : ''}',
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ],
                       ),
                     ),
                   ],
                 )),
-              ).marginSymmetric(vertical: 4.0)
+              ).marginSymmetric(vertical: 8.0)
             ],
           ).marginOnly(left: _kContentHMargin)
         ]),

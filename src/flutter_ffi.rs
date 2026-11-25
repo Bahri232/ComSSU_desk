@@ -2801,6 +2801,52 @@ pub fn main_get_common(key: String) -> String {
         return ui_interface::is_permanent_password_set().to_string();
     } else if key == "local-permanent-password-set" {
         return ui_interface::is_local_permanent_password_set().to_string();
+    } else if key == "local-ip" {
+        #[cfg(not(target_os = "ios"))]
+        {
+            if let Ok(iface) = default_net::get_default_interface() {
+                for ipv4 in &iface.ipv4 {
+                    let ip = ipv4.addr;
+                    if !ip.is_loopback() && !ip.is_link_local() && !ip.is_unspecified() {
+                        return ip.to_string();
+                    }
+                }
+            }
+            let mut best_ip: Option<(u8, std::net::Ipv4Addr)> = None;
+            for iface in default_net::get_interfaces() {
+                let name = iface.name.to_lowercase();
+                let desc = iface.description.unwrap_or_default().to_lowercase();
+                let is_virtual = ["vethernet", "wsl", "docker", "vbox", "vmware", "virtual", "loopback", "tailscale", "zerotier", "tun", "tap"]
+                    .iter()
+                    .any(|k| name.contains(k) || desc.contains(k));
+                for ipv4 in &iface.ipv4 {
+                    let ip = ipv4.addr;
+                    if ip.is_loopback() || ip.is_link_local() || ip.is_unspecified() {
+                        continue;
+                    }
+                    let octets = ip.octets();
+                    let mut score: u8 = if octets[0] == 192 && octets[1] == 168 {
+                        40
+                    } else if octets[0] == 10 {
+                        30
+                    } else if octets[0] == 172 && (16..=31).contains(&octets[1]) {
+                        20
+                    } else {
+                        10
+                    };
+                    if !is_virtual {
+                        score += 50;
+                    }
+                    if best_ip.map_or(true, |(best_score, _)| score > best_score) {
+                        best_ip = Some((score, ip));
+                    }
+                }
+            }
+            if let Some((_, ip)) = best_ip {
+                return ip.to_string();
+            }
+        }
+        return String::new();
     } else {
         if key.starts_with("download-data-") {
             let id = key.replace("download-data-", "");

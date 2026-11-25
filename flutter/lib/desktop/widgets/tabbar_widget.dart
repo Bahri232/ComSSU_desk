@@ -263,7 +263,7 @@ class DesktopTab extends StatefulWidget {
     Key? key,
     required this.controller,
     this.showLogo = true,
-    this.showTitle = false,
+    this.showTitle = true,
     this.showMinimize = true,
     this.showMaximize = true,
     this.showClose = true,
@@ -654,9 +654,10 @@ class _DesktopTabState extends State<DesktopTab>
                         Offstage(
                             offstage: !showTitle,
                             child: const Text(
-                              "RustDesk",
-                              style: TextStyle(fontSize: 13),
-                            ).marginOnly(left: 2))
+                              "ComSSU Desk",
+                              style: TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w600),
+                            ).marginOnly(left: 5))
                       ]).marginOnly(
                         left: 5,
                         right: 10,

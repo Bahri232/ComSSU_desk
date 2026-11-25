@@ -52,6 +52,9 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
   final RxBool _editHover = false.obs;
   final RxBool _block = false.obs;
+  final TextEditingController _localIpController =
+      TextEditingController(text: '...');
+  int _ipRefreshTick = 0;
 
   final GlobalKey _childKey = GlobalKey();
 
@@ -91,6 +94,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       ),
       buildTip(context),
       if (!isOutgoingOnly) buildIDBoard(context),
+      if (!isOutgoingOnly) buildLanIpBoard(context),
       if (!isOutgoingOnly) buildPasswordBoard(context),
       FutureBuilder<Widget>(
         future: Future.value(
@@ -244,6 +248,152 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                       ).workaroundFreezeLinuxMint(),
                     ),
                   )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _refreshLocalLanIp() async {
+    String ip = '';
+    if (!isWeb) {
+      try {
+        ip = bind.mainGetCommonSync(key: 'local-ip').trim();
+      } catch (_) {}
+    }
+    if (ip.isEmpty && !isWeb) {
+      try {
+        final interfaces = await NetworkInterface.list(
+          type: InternetAddressType.IPv4,
+          includeLoopback: false,
+        );
+        int bestScore = -1;
+        for (final iface in interfaces) {
+          final name = iface.name.toLowerCase();
+          final isVirtual = name.contains('vethernet') ||
+              name.contains('wsl') ||
+              name.contains('docker') ||
+              name.contains('vbox') ||
+              name.contains('virtual') ||
+              name.contains('vmware') ||
+              name.contains('loopback') ||
+              name.contains('npcap') ||
+              name.contains('tailscale') ||
+              name.contains('zerotier');
+          for (final addr in iface.addresses) {
+            final candidate = addr.address;
+            if (candidate.startsWith('127.') ||
+                candidate.startsWith('169.254.')) {
+              continue;
+            }
+            int score = isVirtual ? 0 : 100;
+            if (candidate.startsWith('192.168.')) {
+              score += 30;
+            } else if (candidate.startsWith('10.')) {
+              score += 20;
+            } else if (RegExp(r'^172\.(1[6-9]|2\d|3[0-1])\.')
+                .hasMatch(candidate)) {
+              score += 10;
+            }
+            if (score > bestScore) {
+              bestScore = score;
+              ip = candidate;
+            }
+          }
+        }
+      } catch (_) {}
+    }
+    final displayIp = ip.isNotEmpty ? ip : 'No LAN IP';
+    if (_localIpController.text != displayIp) {
+      _localIpController.text = displayIp;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
+  Widget buildLanIpBoard(BuildContext context) {
+    final textColor = Theme.of(context).textTheme.titleLarge?.color;
+    final RxBool copyHover = false.obs;
+    final configuredPort =
+        bind.mainGetOptionSync(key: kOptionDirectAccessPort).trim();
+    final portLabel = configuredPort.isEmpty ? '21118' : configuredPort;
+    return Container(
+      margin: const EdgeInsets.only(left: 20.0, right: 16, top: 13),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Container(
+            width: 2,
+            height: 52,
+            decoration: const BoxDecoration(color: MyTheme.accent),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 7),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AutoSizeText(
+                    'LAN IP (Direct: $portLabel)',
+                    style: TextStyle(
+                        fontSize: 13, color: textColor?.withOpacity(0.5)),
+                    maxLines: 1,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            final ip = _localIpController.text;
+                            if (ip.isNotEmpty && ip != 'No LAN IP') {
+                              Clipboard.setData(ClipboardData(text: ip));
+                              showToast(translate("Copied"));
+                            }
+                          },
+                          child: TextFormField(
+                            controller: _localIpController,
+                            readOnly: true,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              contentPadding:
+                                  EdgeInsets.only(top: 10, bottom: 10),
+                            ),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ).workaroundFreezeLinuxMint(),
+                        ),
+                      ),
+                      InkWell(
+                        child: Tooltip(
+                          message: translate('Copy'),
+                          child: Obx(
+                            () => Icon(
+                              Icons.copy,
+                              color: copyHover.value
+                                  ? textColor
+                                  : const Color(0xFFDDDDDD),
+                              size: 19,
+                            ).marginOnly(right: 8, top: 4),
+                          ),
+                        ),
+                        onTap: () {
+                          final ip = _localIpController.text;
+                          if (ip.isNotEmpty && ip != 'No LAN IP') {
+                            Clipboard.setData(ClipboardData(text: ip));
+                            showToast(translate("Copied"));
+                          }
+                        },
+                        onHover: (value) => copyHover.value = value,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -716,8 +866,12 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   @override
   void initState() {
     super.initState();
+    _refreshLocalLanIp();
     _updateTimer = periodic_immediate(const Duration(seconds: 1), () async {
       await gFFI.serverModel.fetchID();
+      if ((++_ipRefreshTick % 3) == 0) {
+        await _refreshLocalLanIp();
+      }
       final error = await bind.mainGetError();
       if (systemError != error) {
         systemError = error;

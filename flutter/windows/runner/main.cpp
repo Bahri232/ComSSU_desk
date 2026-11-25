@@ -84,17 +84,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
         command_line_arguments.end());
   }
 
-  std::wstring app_name = L"RustDesk";
+  std::wstring app_name = L"ComSSU Desk";
   FUNC_RUSTDESK_GET_APP_NAME get_rustdesk_app_name = (FUNC_RUSTDESK_GET_APP_NAME)GetProcAddress(hInstance, "get_rustdesk_app_name");
   if (get_rustdesk_app_name) {
     wchar_t app_name_buffer[512] = {0};
     if (get_rustdesk_app_name(app_name_buffer, 512) == 0) {
-      app_name = std::wstring(app_name_buffer);
+      std::wstring raw_name(app_name_buffer);
+      if (!raw_name.empty() && raw_name != L"RustDesk") {
+        app_name = raw_name;
+      }
     }
   }
 
   // Uri links dispatch
   HWND hwnd = ::FindWindowW(getWindowClassName(), app_name.c_str());
+  if (hwnd == NULL) {
+    hwnd = ::FindWindowW(getWindowClassName(), L"RustDesk");
+  }
   if (hwnd != NULL) {
     // Allow multiple flutter instances when being executed by parameters
     // contained in whitelists.
