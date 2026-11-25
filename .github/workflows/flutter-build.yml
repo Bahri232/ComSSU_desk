@@ -12,13 +12,6 @@ on:
       publish-update-metadata:
         type: boolean
         default: false
-  push:
-    branches:
-      - master
-      - main
-    paths-ignore:
-      - "docs/**"
-      - "README.md"
   workflow_call:
     inputs:
       upload-artifact:
