@@ -1657,6 +1657,8 @@ fn get_after_install(
     if \"{firewall_rules}\"==\"1\" (
     netsh advfirewall firewall add rule name=\"{app_name} Service\" dir=out action=allow program=\"{exe}\" enable=yes
     netsh advfirewall firewall add rule name=\"{app_name} Service\" dir=in action=allow program=\"{exe}\" enable=yes
+    netsh advfirewall firewall add rule name=\"{app_name} Direct IP\" dir=in action=allow protocol=TCP localport=21118 enable=yes
+    netsh advfirewall firewall add rule name=\"{app_name} LAN Discovery\" dir=in action=allow protocol=UDP localport=21119 enable=yes
     )
     {create_service}
     reg add HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /f /v SoftwareSASGeneration /t REG_DWORD /d 1
@@ -1894,6 +1896,8 @@ fn get_before_uninstall(kill_self: bool) -> ResultType<String> {
     reg delete HKEY_CLASSES_ROOT\\.{ext} /f
     reg delete HKEY_CLASSES_ROOT\\{ext} /f
     netsh advfirewall firewall delete rule name=\"{app_name} Service\"
+    netsh advfirewall firewall delete rule name=\"{app_name} Direct IP\"
+    netsh advfirewall firewall delete rule name=\"{app_name} LAN Discovery\"
     ",
         broker_exe = WIN_TOPMOST_INJECTED_PROCESS_EXE,
     ))

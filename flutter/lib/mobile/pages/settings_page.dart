@@ -1207,7 +1207,7 @@ void showThemeSettings(OverlayDialogManager dialogManager) async {
 void showAbout(OverlayDialogManager dialogManager) {
   dialogManager.show((setState, close, context) {
     return CustomAlertDialog(
-      title: const Text('About ComSSU Desk'),
+      title: const Text('About ComSSU_desk'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1237,7 +1237,7 @@ void showAbout(OverlayDialogManager dialogManager) {
           Text('Version: $version'),
           const SizedBox(height: 8),
           const Text(
-            'Built on the open-source RustDesk project (AGPL-3.0).',
+            'Built on the open-source RustDesk framework (AGPL-3.0).',
             style: TextStyle(fontSize: 12),
           ),
         ],

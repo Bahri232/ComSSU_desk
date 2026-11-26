@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "Computer Science Students' Society (ComSSU) — University of Makeni (UniMak)" "\0"
-            VALUE "FileDescription", "ComSSU Desk — Computer Science Students' Society (ComSSU) — University of Makeni (UniMak)" "\0"
+            VALUE "FileDescription", "ComSSU_desk — Computer Science Students' Society (ComSSU) — University of Makeni (UniMak)" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "rustdesk" "\0"
             VALUE "LegalCopyright", "Copyright © 2026/27 Computer Science Students' Society (ComSSU) — University of Makeni (UniMak). Built on RustDesk (AGPL-3.0)." "\0"
             VALUE "OriginalFilename", "rustdesk.exe" "\0"
-            VALUE "ProductName", "ComSSU Desk" "\0"
+            VALUE "ProductName", "ComSSU_desk" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

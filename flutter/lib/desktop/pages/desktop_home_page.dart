@@ -339,9 +339,11 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AutoSizeText(
-                    'LAN IP (Direct: $portLabel)',
+                    'Local IP Address (Direct IP: $portLabel)',
                     style: TextStyle(
-                        fontSize: 13, color: textColor?.withOpacity(0.5)),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: textColor?.withOpacity(0.6)),
                     maxLines: 1,
                   ),
                   Row(
@@ -361,11 +363,12 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                             decoration: const InputDecoration(
                               border: InputBorder.none,
                               contentPadding:
-                                  EdgeInsets.only(top: 10, bottom: 10),
+                                  EdgeInsets.only(top: 8, bottom: 8),
                             ),
                             style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ).workaroundFreezeLinuxMint(),
                         ),
@@ -584,7 +587,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         !bind.isOutgoingOnly() &&
         !mainGetBoolOptionSync(kOptionStopService) &&
         !bind.mainIsInstalledDaemon(prompt: false)) {
-      return buildInstallCard("", "install_daemon_tip", "Install", () async {
+      return buildInstallCard("", "install_daemon_tip", "Install ComSSU_desk", () async {
         await rustDeskWinManager.closeAllSubWindows();
         await start_service(true);
       });
@@ -622,7 +625,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     if (isWindows && !bind.isDisableInstallation()) {
       if (!bind.mainIsInstalled()) {
         return buildInstallCard(
-            "", bind.isOutgoingOnly() ? "" : "install_tip", "Install",
+            "", bind.isOutgoingOnly() ? "" : "install_tip", "Install ComSSU_desk",
             () async {
           await rustDeskWinManager.closeAllSubWindows();
           bind.mainGotoInstall();
@@ -816,13 +819,13 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     FixedWidthButton(
-                                      width: 150,
+                                      width: btnText.length > 10 ? 220 : 150,
                                       padding: 8,
                                       isOutline: true,
                                       text: translate(btnText),
                                       textColor: Colors.white,
                                       borderColor: Colors.white,
-                                      textSize: 20,
+                                      textSize: btnText.length > 10 ? 16 : 20,
                                       radius: 10,
                                       onTap: onPressed,
                                     )

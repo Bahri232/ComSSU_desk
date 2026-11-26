@@ -130,11 +130,15 @@ pub fn init_sodium() {
 
 pub fn global_init() -> bool {
     init_sodium();
-    config::DEFAULT_SETTINGS
-        .write()
-        .unwrap()
+    *hbb_common::config::APP_NAME.write().unwrap() = "ComSSU_desk".to_owned();
+    let mut default_settings = config::DEFAULT_SETTINGS.write().unwrap();
+    default_settings
         .entry(keys::OPTION_DIRECT_SERVER.to_owned())
         .or_insert_with(|| "Y".to_owned());
+    default_settings
+        .entry(keys::OPTION_ENABLE_LAN_DISCOVERY.to_owned())
+        .or_insert_with(|| "Y".to_owned());
+    drop(default_settings);
     #[cfg(all(target_os = "linux", feature = "drm"))]
     crate::platform::linux::dispatch_wayland_display_probe();
     #[cfg(target_os = "linux")]
@@ -1238,12 +1242,17 @@ pub async fn do_check_software_update() -> hbb_common::ResultType<()> {
 
 #[inline]
 pub fn get_app_name() -> String {
-    hbb_common::config::APP_NAME.read().unwrap().clone()
+    let name = hbb_common::config::APP_NAME.read().unwrap().clone();
+    if name.is_empty() || name == "RustDesk" {
+        "ComSSU_desk".to_string()
+    } else {
+        name
+    }
 }
 
 #[inline]
 pub fn is_rustdesk() -> bool {
-    hbb_common::config::APP_NAME.read().unwrap().eq("RustDesk")
+    false
 }
 
 #[inline]

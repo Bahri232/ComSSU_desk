@@ -3062,7 +3062,7 @@ int versionCmp(String v1, String v2) {
   return bind.versionToNumber(v: v1) - bind.versionToNumber(v: v2);
 }
 
-const String kComssuAppName = "ComSSU Desk";
+const String kComssuAppName = "ComSSU_desk";
 
 String getWindowName({WindowType? overrideType}) {
   final rawName = bind.mainGetAppNameSync();

@@ -2595,7 +2595,7 @@ class _AboutState extends State<_About> {
       final scrollController = ScrollController();
       return SingleChildScrollView(
         controller: scrollController,
-        child: _Card(title: 'About ComSSU Desk', children: [
+        child: _Card(title: 'About ComSSU_desk', children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -2618,7 +2618,7 @@ class _AboutState extends State<_About> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'ComSSU Desk',
+                            'ComSSU_desk',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -2709,7 +2709,7 @@ class _AboutState extends State<_About> {
                           ),
                           const SizedBox(height: 6.0),
                           Text(
-                            'Built on the open-source RustDesk project (AGPL-3.0).${license.isNotEmpty ? '\n$license' : ''}',
+                            'Built on the open-source RustDesk framework (AGPL-3.0).${license.isNotEmpty ? '\n$license' : ''}',
                             style: const TextStyle(color: Colors.white),
                           ),
                         ],

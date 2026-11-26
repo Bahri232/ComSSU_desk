@@ -41,8 +41,8 @@ class PeerTabModel with ChangeNotifier {
     true,
     true,
     !isWeb && bind.mainGetLocalOption(key: "disable-discovery-panel") != "Y",
-    !(bind.isDisableAb() || bind.isDisableAccount()),
-    !(bind.isDisableGroupPanel() || bind.isDisableAccount()),
+    false,
+    false,
   ]);
   final List<bool> _isVisible = List.filled(maxTabCount, true, growable: false);
   List<bool> get isVisibleEnabled => () {
@@ -108,11 +108,13 @@ class PeerTabModel with ChangeNotifier {
     } catch (e) {
       debugPrint("failed to get peer tab order list: $e");
     }
-    // init currentTab
-    _currentTab =
-        int.tryParse(bind.getLocalFlutterOption(k: kOptionPeerTabIndex)) ?? 0;
-    if (_currentTab < 0 || _currentTab >= maxTabCount) {
-      _currentTab = 0;
+    // init currentTab: default to Discovered (LAN) peers on fresh install
+    final savedTab = bind.getLocalFlutterOption(k: kOptionPeerTabIndex);
+    _currentTab = savedTab.isNotEmpty
+        ? (int.tryParse(savedTab) ?? PeerTabIndex.lan.index)
+        : PeerTabIndex.lan.index;
+    if (_currentTab < 0 || _currentTab >= maxTabCount || !isEnabled[_currentTab]) {
+      _currentTab = PeerTabIndex.lan.index;
     }
     _trySetCurrentTabToFirstVisibleEnabled();
   }
