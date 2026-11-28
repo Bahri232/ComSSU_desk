@@ -24,6 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window_size;
 import '../widgets/button.dart';
+import '../widgets/wireless_display_widget.dart';
 
 class DesktopHomePage extends StatefulWidget {
   const DesktopHomePage({Key? key}) : super(key: key);
@@ -52,6 +53,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
   final RxBool _editHover = false.obs;
   final RxBool _block = false.obs;
+  final RxBool _showWirelessDisplayMode = true.obs;
   final TextEditingController _localIpController =
       TextEditingController(text: '...');
   int _ipRefreshTick = 0;
@@ -92,6 +94,119 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         alignment: Alignment.center,
         child: loadLogo(),
       ),
+      if (!isOutgoingOnly && !isIncomingOnly)
+        Obx(() => Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE2E8F0),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () => _showWirelessDisplayMode.value = true,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        decoration: BoxDecoration(
+                          color: _showWirelessDisplayMode.value
+                              ? Colors.white
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: _showWirelessDisplayMode.value
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.06),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.tv,
+                              size: 13,
+                              color: _showWirelessDisplayMode.value
+                                  ? const Color(0xFF0284C7)
+                                  : const Color(0xFF64748B),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Display',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: _showWirelessDisplayMode.value
+                                    ? FontWeight.bold
+                                    : FontWeight.w600,
+                                color: _showWirelessDisplayMode.value
+                                    ? const Color(0xFF0F172A)
+                                    : const Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () => _showWirelessDisplayMode.value = false,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        decoration: BoxDecoration(
+                          color: !_showWirelessDisplayMode.value
+                              ? Colors.white
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: !_showWirelessDisplayMode.value
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.06),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.laptop_chromebook,
+                              size: 13,
+                              color: !_showWirelessDisplayMode.value
+                                  ? const Color(0xFF0284C7)
+                                  : const Color(0xFF64748B),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Connect',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: !_showWirelessDisplayMode.value
+                                    ? FontWeight.bold
+                                    : FontWeight.w600,
+                                color: !_showWirelessDisplayMode.value
+                                    ? const Color(0xFF0F172A)
+                                    : const Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )),
       buildTip(context),
       if (!isOutgoingOnly) buildIDBoard(context),
       if (!isOutgoingOnly) buildLanIpBoard(context),
@@ -183,10 +298,19 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   }
 
   buildRightPane(BuildContext context) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: ConnectionPage(),
-    );
+    return Obx(() {
+      if (_showWirelessDisplayMode.value) {
+        return WirelessDisplayWidget(
+          onSwitchToConnectMode: () => _showWirelessDisplayMode.value = false,
+        );
+      }
+      return Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: ConnectionPage(
+          onSwitchToDisplayMode: () => _showWirelessDisplayMode.value = true,
+        ),
+      );
+    });
   }
 
   buildIDBoard(BuildContext context) {

@@ -378,12 +378,11 @@ class MyTheme {
     dialogBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
       shadowColor: Colors.transparent,
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFFFFFFF),
       foregroundColor: Color(0xFF0F172A),
     ),
     dialogTheme: DialogTheme(
       elevation: 8,
-      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
         side: const BorderSide(
@@ -462,7 +461,7 @@ class MyTheme {
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF),
         foregroundColor: MyTheme.accent,
         side: const BorderSide(color: MyTheme.accent, width: 1.2),
         shape: RoundedRectangleBorder(

@@ -27,6 +27,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../common/widgets/dialog.dart';
 import '../../common/widgets/login.dart';
+import '../../common/widgets/comssu_about_dialog.dart';
 
 const double _kTabWidth = 200;
 const double _kTabHeight = 42;
@@ -2701,21 +2702,37 @@ class _AboutState extends State<_About> {
                         border: Border.all(color: const Color(0xFFBAE6FD)),
                       ),
                       child: const Text(
-                        'Engineered for cross-platform wireless screen projection (Direct IP, LAN Discovery) for large-format interactive flat panel displays and classroom computers.',
+                        'Engineered for cross-platform wireless screen projection (AirPlay, Miracast, Google Cast) for large-format interactive flat panel displays.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 13,
-                          height: 1.4,
+                          height: 1.45,
                           color: Color(0xFF0369A1),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12.0),
+                    const SizedBox(height: 14.0),
                     const Text(
                       'Built with love by BAHRI • Built on the open-source RustDesk framework (AGPL-3.0)',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 12, color: Color(0xFF94A3B8)),
+                    ),
+                    const SizedBox(height: 16.0),
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Color(0xFF0284C7), width: 1.2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      ),
+                      onPressed: () => showComSSUAboutDialog(context),
+                      icon: const Icon(Icons.info_outline, size: 18, color: Color(0xFF0284C7)),
+                      label: const Text(
+                        'View About System Dialog',
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF0284C7)),
+                      ),
                     ),
                     const SizedBox(height: 8.0),
                   ],
