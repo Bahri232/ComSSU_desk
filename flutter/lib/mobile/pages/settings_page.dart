@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../common.dart';
 import '../../common/widgets/dialog.dart';
 import '../../common/widgets/login.dart';
+import '../../common/widgets/comssu_about_dialog.dart';
 import '../../consts.dart';
 import '../../models/model.dart';
 import '../../models/platform_model.dart';
@@ -37,8 +38,6 @@ class SettingsPage extends StatefulWidget implements PageShape {
   @override
   State<SettingsPage> createState() => _SettingsState();
 }
-
-const url = 'https://rustdesk.com/';
 
 enum KeepScreenOn {
   never,
@@ -1060,47 +1059,56 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
           title: Text(translate("About")),
           tiles: [
             SettingsTile(
-                onPressed: (context) async {
-                  await launchUrl(Uri.parse(url));
+                onPressed: (context) {
+                  showAbout(dialogManager);
                 },
-                title: Text('${translate('Version')}: $version'),
-                value: Padding(
+                title: const Text('ComSSU_desk'),
+                value: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text('rustdesk.com',
+                  child: Text('v1.0.0 — 2026/27 Academic Year',
                       style: TextStyle(
-                        decoration: TextDecoration.underline,
+                        color: Color(0xFF0284C7),
+                        fontWeight: FontWeight.w600,
                       )),
                 ),
-                leading: Icon(Icons.info)),
+                leading: const Icon(Icons.info_outline)),
             SettingsTile(
                 title: Text(translate("Build Date")),
                 value: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(_buildDate),
                 ),
-                leading: Icon(Icons.query_builder)),
+                leading: const Icon(Icons.query_builder)),
             if (isAndroid)
               SettingsTile(
                   onPressed: (context) => onCopyFingerprint(_fingerprint),
                   title: Text(translate("Fingerprint")),
                   value: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Text(_fingerprint),
                   ),
-                  leading: Icon(Icons.fingerprint)),
+                  leading: const Icon(Icons.fingerprint)),
             SettingsTile(
                 onPressed: (context) => onCopyId(_myId),
                 title: Text(translate("ID")),
                 value: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(_myId),
                 ),
-                leading: Icon(Icons.perm_identity)),
+                leading: const Icon(Icons.perm_identity)),
             SettingsTile(
-              title: Text(translate("Privacy Statement")),
+              title: const Text('Contact ComSSU'),
+              value: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text('comssu.unimak@gmail.com',
+                    style: TextStyle(
+                      color: Color(0xFF0284C7),
+                      decoration: TextDecoration.underline,
+                    )),
+              ),
               onPressed: (context) =>
-                  launchUrlString('https://rustdesk.com/privacy.html'),
-              leading: Icon(Icons.privacy_tip),
+                  launchUrlString('mailto:comssu.unimak@gmail.com'),
+              leading: const Icon(Icons.email_outlined),
             )
           ],
         ),
@@ -1207,40 +1215,12 @@ void showThemeSettings(OverlayDialogManager dialogManager) async {
 void showAbout(OverlayDialogManager dialogManager) {
   dialogManager.show((setState, close, context) {
     return CustomAlertDialog(
-      title: const Text('About ComSSU_desk'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Image.asset(
-              'assets/comssu_logo.png',
-              width: 72,
-              height: 72,
-              fit: BoxFit.contain,
-              errorBuilder: (ctx, error, stackTrace) => loadIcon(56),
-            ),
-          ).marginOnly(bottom: 12),
-          const Text(
-            'ComSSU Remote — 2026/27 Academic Year',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            "Organization: Computer Science Students' Society (ComSSU), University of Makeni (UniMak)",
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Lead Developer: Abdul Malik Barrie (BAHRI) (abdulmalikbarrie@gmail.com)',
-          ),
-          const SizedBox(height: 8),
-          Text('Version: $version'),
-          const SizedBox(height: 8),
-          const Text(
-            'Built on the open-source RustDesk framework (AGPL-3.0).',
-            style: TextStyle(fontSize: 12),
-          ),
-        ],
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 580, maxWidth: 460),
+        child: ComSSUAboutContent(
+          isDialog: true,
+          onClose: close,
+        ),
       ),
       actions: [],
     );
