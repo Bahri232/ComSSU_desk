@@ -1542,15 +1542,21 @@ pub fn rename_exe_cmd(src_exe: &str, path: &str) -> ResultType<String> {
         .to_string_lossy()
         .to_string();
     let app_name = crate::get_app_name();
-    if src_exe_filename == format!("{app_name}.exe") {
-        Ok("".to_owned())
-    } else {
-        Ok(format!(
-            "
-        move /Y \"{path}\\{src_exe_filename}\" \"{path}\\{app_name}.exe\"
-        ",
-        ))
+    let mut cmds = Vec::new();
+    if !src_exe_filename.eq_ignore_ascii_case(&format!("{app_name}.exe")) {
+        cmds.push(format!(
+            "if exist \"{path}\\{src_exe_filename}\" move /Y \"{path}\\{src_exe_filename}\" \"{path}\\{app_name}.exe\""
+        ));
     }
+    if !app_name.eq_ignore_ascii_case("rustdesk") {
+        cmds.push(format!(
+            "if exist \"{path}\\rustdesk.exe\" if not exist \"{path}\\{app_name}.exe\" move /Y \"{path}\\rustdesk.exe\" \"{path}\\{app_name}.exe\""
+        ));
+    }
+    cmds.push(format!(
+        "if not exist \"{path}\\{app_name}.exe\" copy /Y \"{src_exe}\" \"{path}\\{app_name}.exe\""
+    ));
+    Ok(cmds.join("\r\n"))
 }
 
 #[inline]
@@ -1819,6 +1825,7 @@ copy /Y \"{tmp_path}\\{app_name} Tray.lnk\" \"%PROGRAMDATA%\\Microsoft\\Windows\
 chcp 65001
 md \"{path}\"
 {copy_exe}
+{rename_exe}
 reg add {subkey} /f
 reg add {subkey} /f /v DisplayIcon /t REG_SZ /d \"{display_icon}\"
 reg add {subkey} /f /v DisplayName /t REG_SZ /d \"{app_name}\"
@@ -1850,6 +1857,7 @@ copy /Y \"{tmp_path}\\Uninstall {app_name}.lnk\" \"{path}\\\"
         sleep = if debug { "timeout 300" } else { "" },
         dels = if debug { "" } else { &dels },
         copy_exe = copy_exe_cmd(&src_exe, &exe, &path)?,
+        rename_exe = rename_exe_cmd(&src_exe, &path)?,
         import_config = get_import_config(&exe),
     );
     run_cmds(
@@ -4067,7 +4075,8 @@ pub fn handle_service_control() -> Option<std::process::ExitCode> {
         std::process::ExitCode::SUCCESS
     } else {
         eprintln!(
-            "RustDesk service control failed: {}",
+            "{} service control failed: {}",
+            crate::get_app_name(),
             std::io::Error::from_raw_os_error(error as i32)
         );
         std::process::ExitCode::FAILURE
@@ -4106,7 +4115,9 @@ fn service_control_command(operation: &str, exe: &str, installed_now: bool) -> R
     };
     Ok(format!(
         "start \"\" /b /wait \"{exe}\" --service-control {operation} \"{app_name}\"{executable_argument}\r\n\
-         if not \"%errorlevel%\"==\"0\" exit /b %errorlevel%"
+         if not \"%errorlevel%\"==\"0\" (\r\n\
+             {legacy}\r\n\
+         )"
     ))
 }
 
@@ -4247,7 +4258,7 @@ pub fn message_box(text: &str) {
         .encode_utf16()
         .chain(std::iter::once(0))
         .collect::<Vec<u16>>();
-    let caption = "RustDesk Output"
+    let caption = format!("{} Output", crate::get_app_name())
         .encode_utf16()
         .chain(std::iter::once(0))
         .collect::<Vec<u16>>();

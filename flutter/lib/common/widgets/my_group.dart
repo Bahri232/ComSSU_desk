@@ -29,32 +29,7 @@ class _MyGroupState extends State<MyGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (!gFFI.userModel.isLogin) {
-        return Center(
-            child: ElevatedButton(
-                onPressed: loginDialog, child: Text(translate("Login"))));
-      } else if (gFFI.userModel.networkError.isNotEmpty) {
-        return netWorkErrorWidget();
-      } else if (gFFI.groupModel.groupLoading.value && gFFI.groupModel.emtpy) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-      return Column(
-        children: [
-          buildErrorBanner(context,
-              loading: gFFI.groupModel.groupLoading,
-              err: gFFI.groupModel.groupLoadError,
-              retry: null,
-              close: () => gFFI.groupModel.groupLoadError.value = ''),
-          Expanded(
-              child: Obx(() => stateGlobal.isPortrait.isTrue
-                  ? _buildPortrait()
-                  : _buildLandscape())),
-        ],
-      );
-    });
+    return const SizedBox.shrink();
   }
 
   Widget _buildLandscape() {

@@ -84,6 +84,8 @@ class PeerTabModel with ChangeNotifier {
     } catch (e) {
       debugPrint("failed to get peer tab visible list:$e");
     }
+    _isVisible[PeerTabIndex.ab.index] = false;
+    _isVisible[PeerTabIndex.group.index] = false;
     // order
     try {
       final option = bind.getLocalFlutterOption(k: kOptionPeerTabOrder);
@@ -220,6 +222,7 @@ class PeerTabModel with ChangeNotifier {
 
   setTabVisible(int index, bool visible) {
     if (index >= 0 && index < maxTabCount) {
+      if (!isEnabled[index]) return;
       if (_isVisible[index] != visible) {
         _isVisible[index] = visible;
         if (index == _currentTab && !visible) {

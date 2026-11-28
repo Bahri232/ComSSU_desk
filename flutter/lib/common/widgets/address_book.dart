@@ -38,39 +38,7 @@ class _AddressBookState extends State<AddressBook> {
   var menuPos = RelativeRect.fill;
 
   @override
-  Widget build(BuildContext context) => Obx(() {
-        if (!gFFI.userModel.isLogin) {
-          return Center(
-              child: ElevatedButton(
-                  onPressed: loginDialog, child: Text(translate("Login"))));
-        } else if (gFFI.userModel.networkError.isNotEmpty) {
-          return netWorkErrorWidget();
-        } else {
-          return Column(
-            children: [
-              // NOT use Offstage to wrap LinearProgressIndicator
-              if (gFFI.abModel.currentAbLoading.value &&
-                  gFFI.abModel.currentAbEmpty)
-                const LinearProgressIndicator(),
-              buildErrorBanner(context,
-                  loading: gFFI.abModel.currentAbLoading,
-                  err: gFFI.abModel.abPullError,
-                  retry: null,
-                  close: gFFI.abModel.clearPullErrors),
-              buildErrorBanner(context,
-                  loading: gFFI.abModel.currentAbLoading,
-                  err: gFFI.abModel.currentAbPushError,
-                  retry: null, // remove retry
-                  close: () => gFFI.abModel.currentAbPushError.value = ''),
-              Expanded(
-                child: Obx(() => stateGlobal.isPortrait.isTrue
-                    ? _buildAddressBookPortrait()
-                    : _buildAddressBookLandscape()),
-              ),
-            ],
-          );
-        }
-      });
+  Widget build(BuildContext context) => const SizedBox.shrink();
 
   Widget _buildAddressBookLandscape() {
     return Row(
