@@ -2602,122 +2602,125 @@ class _AboutState extends State<_About> {
               const SizedBox(
                 height: 8.0,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/comssu_logo.png',
-                    width: 84,
-                    height: 84,
-                    fit: BoxFit.contain,
-                    errorBuilder: (ctx, error, stackTrace) => loadIcon(64),
-                  ).marginOnly(right: 16.0),
-                  Expanded(
-                    child: SelectionArea(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'ComSSU_desk',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4.0),
-                          const Text(
-                            'ComSSU Remote — 2026/27 Academic Year',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 4.0),
-                          const Text(
-                            "Computer Science Students' Society (ComSSU) — University of Makeni (UniMak)",
-                            style: TextStyle(fontSize: 13),
-                          ),
-                        ],
+              Center(
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'assets/comssu_logo.png',
+                      width: 96,
+                      height: 96,
+                      fit: BoxFit.contain,
+                      errorBuilder: (ctx, error, stackTrace) => loadIcon(64),
+                    ).marginOnly(bottom: 12.0),
+                    const Text(
+                      'ComSSU — Wireless Display System',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0F172A),
                       ),
                     ),
-                  ),
-                ],
-              ).marginSymmetric(vertical: 8.0),
-              const Divider(),
-              SelectionArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Organization: Computer Science Students' Society (ComSSU), University of Makeni (UniMak)",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ).marginSymmetric(vertical: 4.0),
+                    const SizedBox(height: 8.0),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Lead Developer: Abdul Malik Barrie (BAHRI) (',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            launchUrlString(
-                                'mailto:abdulmalikbarrie@gmail.com');
-                          },
-                          child: const Text(
-                            'abdulmalikbarrie@gmail.com',
-                            style: linkStyle,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
+                          ),
+                          child: Text(
+                            'Version $version',
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF475569)),
                           ),
                         ),
-                        const Text(
-                          ')',
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE0F2FE),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFBAE6FD)),
+                          ),
+                          child: const Text(
+                            '2026/27 Academic Year',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF0369A1)),
+                          ),
                         ),
                       ],
-                    ).marginSymmetric(vertical: 4.0),
+                    ),
+                    const SizedBox(height: 12.0),
                     const Text(
-                      'Academic Year: 2026/27 Academic Year',
-                    ).marginSymmetric(vertical: 4.0),
-                    Text('${translate('Version')}: $version')
-                        .marginSymmetric(vertical: 4.0),
-                    Text('${translate('Build Date')}: $buildDate')
-                        .marginSymmetric(vertical: 4.0),
-                    if (!isWeb)
-                      Text('${translate('Fingerprint')}: $fingerprint')
-                          .marginSymmetric(vertical: 4.0),
-                    Text('${translate('ID')}: $myId')
-                        .marginSymmetric(vertical: 4.0),
+                      "COMPUTER SCIENCE STUDENTS' SOCIETY (ComSSU)",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                    const SizedBox(height: 2.0),
+                    const Text(
+                      "University of Makeni (UniMak)",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+                    ),
+                    const SizedBox(height: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Lead Developer: ',
+                          style: TextStyle(fontSize: 13, color: Color(0xFF475569)),
+                        ),
+                        const Text(
+                          'Abdul Malik Barrie (BAHRI)',
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+                        ),
+                        const Text(' — ', style: TextStyle(color: Color(0xFF94A3B8))),
+                        InkWell(
+                          onTap: () => launchUrlString('mailto:abdulmalikbarrie@gmail.com'),
+                          child: const Text(
+                            'abdulmalikbarrie@gmail.com',
+                            style: TextStyle(fontSize: 13, color: Color(0xFF0284C7), decoration: TextDecoration.underline),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16.0),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF0F9FF),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFFBAE6FD)),
+                      ),
+                      child: const Text(
+                        'Engineered for cross-platform wireless screen projection (Direct IP, LAN Discovery) for large-format interactive flat panel displays and classroom computers.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13,
+                          height: 1.4,
+                          color: Color(0xFF0369A1),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12.0),
+                    const Text(
+                      'Built with love by BAHRI • Built on the open-source RustDesk framework (AGPL-3.0)',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12, color: Color(0xFF94A3B8)),
+                    ),
+                    const SizedBox(height: 8.0),
                   ],
                 ),
               ),
-              Container(
-                decoration: const BoxDecoration(color: Color(0xFF2c8cff)),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-                child: SelectionArea(
-                    child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Computer Science Students' Society (ComSSU) — University of Makeni (UniMak)",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white),
-                          ),
-                          const SizedBox(height: 6.0),
-                          Text(
-                            'Built on the open-source RustDesk framework (AGPL-3.0).${license.isNotEmpty ? '\n$license' : ''}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )),
-              ).marginSymmetric(vertical: 8.0)
             ],
           ).marginOnly(left: _kContentHMargin)
         ]),
