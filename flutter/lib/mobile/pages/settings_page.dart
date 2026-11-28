@@ -1060,7 +1060,7 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
           tiles: [
             SettingsTile(
                 onPressed: (context) {
-                  showAbout(dialogManager);
+                  showAbout(gFFI.dialogManager);
                 },
                 title: const Text('ComSSU_desk'),
                 value: const Padding(
