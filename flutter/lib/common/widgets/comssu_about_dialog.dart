@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hbb/common.dart';
+import 'package:flutter_hbb/common.dart' hide Dialog;
 import 'package:url_launcher/url_launcher_string.dart';
 
 void showComSSUAboutDialog(BuildContext context) {
